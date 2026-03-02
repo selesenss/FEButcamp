@@ -4,13 +4,12 @@ class DateProcessor {
   }
 
   processDateComplex(
-    inputDate,
     includeTime = false,
     extraOffset = 0,
     config = {}
   ) {
-    let date = new Date(inputDate);
-    if (isNaN(date)) {
+    let date = this.date;
+    if (Number.isNaN(date.getTime())) {
       throw new Error("Invalid date");
     }
 
@@ -36,24 +35,24 @@ class DateProcessor {
     }
   }
 
-  formatDateShort() {
+  formatDate(type = 'short'){
     const d = this.date;
     const day = d.getDate().toString().padStart(2, "0");
     const month = (d.getMonth() + 1).toString().padStart(2, "0");
     const year = d.getFullYear();
-    return `${day}/${month}/${year}`;
-  }
 
-  formatDateLong() {
-    const d = this.date;
-    const day = d.getDate().toString().padStart(2, "0");
-    const month = (d.getMonth() + 1).toString().padStart(2, "0");
-    const year = d.getFullYear();
-    return `${day} - ${month} - ${year}`;
+    if (type === 'short') {
+      return `${day}/${month}/${year}`;
+    } else if (type === 'long') {
+      return `${day} - ${month} - ${year}`;
+    }
   }
 
   capitalizeDateString(str) {
-    if (typeof str !== "string") return "";
+    if (typeof str !== "string") {
+      return throw new Error("Argument is not a string");
+    }
+
     return str
       .split(" ")
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
