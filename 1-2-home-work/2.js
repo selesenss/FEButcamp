@@ -7,21 +7,42 @@ const openPopup = (trigger, popupSelector, activeClass) => {
 
 const closePopup = (trigger, popupSelector, activeClass) => {
   const popup = document.querySelector(popupSelector);
-  trigger.addEventListener("click", () => {
-    popup?.classList.remove(activeClass);
-  });
+  const close = () => popup?.classList.remove(activeClass);
 
-  document.addEventListener("keydown", (e) => {
-    const key = e.key;
-
-    if (key === "Escape") {
-      popup?.classList.remove(activeClass);
+  const closeHelper = (event) => {
+    if (event.type === "keydown" && event.key === "Escape") {
+      close()
     }
-  });
 
-  document.addEventListener("click", (e) => {
-    if (e.target === popup) {
-      popup?.classList.remove(activeClass);
+    if (event.type === "click" && event.target === popup) {
+      close();
     }
-  });
+  }
+
+  trigger.addEventListener("click", close);
+  document.addEventListener("keydown", closeHelper);
+  document.addEventListener("click", closeHelper);
 };
+
+//option with refactoring to one toggle function
+const togglePopup = (trigger, popupSelector, activeClass) => {
+  const popup = document.querySelector(popupSelector);
+  const toggle = () => popup?.classList.toggle(activeClass);
+  const close = () => popup?.classList.remove(activeClass);
+
+  if (!trigger || !popup) return;
+
+  const closeHelper = (event) => {
+    if (event.type === "keydown" && event.key === "Escape") {
+      close()
+    }
+
+    if (event.type === "click" && event.target === popup) {
+      close();
+    }
+  }
+
+  trigger.addEventListener("click", toggle);
+  document.addEventListener("keydown", closeHelper);
+  document.addEventListener("click", closeHelper);
+}
